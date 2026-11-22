@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المراجعة التفاعلية الشاملة (3 ساعات) - الرياضيات</title>
+    <!-- تحميل Tailwind CSS للتصميم المتجاوب -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل خط Cairo و Tajawal للغة العربية و Inter للأرقام والمعادلات -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .math-ltr {
+            font-family: 'Inter', monospace;
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: isolate;
+        }
+        /* تأثيرات حركية سلسة */
+        .fade-in {
+            animation: fadeIn 0.35s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+
+    <!-- الشريط العلوي: العنوان ومؤقت الـ 3 ساعات -->
+    <header class="bg-gradient-to-l from-indigo-900 via-indigo-800 to-blue-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <!-- العنوان -->
+                <div class="flex items-center gap-3 text-center md:text-right">
+                    <div class="bg-white/15 p-2.5 rounded-xl backdrop-blur-sm border border-white/20">
+                        <svg class="w-7 h-7 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">المراجعة التفاعلية المكثفة (3 ساعات)</h1>
+                        <p class="text-indigo-200 text-xs sm:text-sm">الوحدة 1: الدوال التربيعية | الوحدة 2: الدوال الكسرية والجذرية</p>
+                    </div>
+                </div>
+
+                <!-- مؤقت الجلسة ونسبة الإنجاز -->
+                <div class="flex flex-wrap items-center justify-center gap-3 bg-indigo-950/60 px-4 py-2 rounded-2xl border border-indigo-500/30">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-3 w-3">
+                            <span id="timer-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 hidden"></span>
+                            <span id="timer-dot" class="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+                        </span>
+                        <span class="text-xs text-indigo-200">الوقت المتبقي:</span>
+                        <span id="timer-display" class="math-ltr font-bold text-lg sm:text-xl text-amber-300 tracking-wider">03:00:00</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 border-r border-indigo-700 pr-3">
+                        <button id="timer-toggle-btn" onclick="toggleTimer()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">
+                            ابدأ المؤقت
+                        </button>
+                        <button onclick="resetTimer()" title="إعادة ضبط 3 ساعات" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold p-1.5 rounded-lg transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شريط التقدم العام -->
+            <div class="mt-4">
+                <div class="flex justify-between text-xs text-indigo-200 mb-1">
+                    <span>نسبة إتقان المراجعة التفاعلية</span>
+                    <span id="progress-text" class="font-bold text-white">0% (0 / 12 سؤال)</span>
+                </div>
+                <div class="w-full bg-indigo-950/80 rounded-full h-2.5 overflow-hidden border border-indigo-700/50">
+                    <div id="progress-bar" class="bg-gradient-to-l from-emerald-400 to-teal-300 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- أزرار التنقل بين مراحل خطة الـ 3 ساعات -->
+        <nav aria-label="مراحل المراجعة" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-6">
+            <button onclick="switchTab('plan')" id="tab-plan" class="tab-btn active-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 border-indigo-600 bg-indigo-600 text-white shadow-md transition">
+                <span class="text-xs opacity-85">الجدول الزمني</span>
+                <span class="font-bold text-sm mt-0.5">خطة الـ 3 ساعات</span>
+            </button>
+            <button onclick="switchTab('u1d1')" id="tab-u1d1" class="tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-indigo-300 transition">
+                <span class="text-xs text-indigo-600 font-semibold">الوحدة 1 • 35 د</span>
+                <span class="font-bold text-sm mt-0.5">الدوال التربيعية</span>
+            </button>
+            <button onclick="switchTab('u1d6')" id="tab-u1d6" class="tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-indigo-300 transition">
+                <span class="text-xs text-indigo-600 font-semibold">الوحدة 1 • 40 د</span>
+                <span class="font-bold text-sm mt-0.5">التحويلات والمتباينات</span>
+            </button>
+            <button onclick="switchTab('u2d2')" id="tab-u2d2" class="tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-teal-300 transition">
+                <span class="text-xs text-teal-600 font-semibold">الوحدة 2 • 30 د</span>
+                <span class="font-bold text-sm mt-0.5">المعادلات الكسرية</span>
+            </button>
+            <button onclick="switchTab('u2d45')" id="tab-u2d45" class="tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-teal-300 transition">
+                <span class="text-xs text-teal-600 font-semibold">الوحدة 2 • 45 د</span>
+                <span class="font-bold text-sm mt-0.5">الدوال الجذرية (4 و 5)</span>
+            </button>
+            <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition">
+                <span class="text-xs text-amber-700 font-semibold">التقييم • 60 د (40 نقطة)</span>
+                <span class="font-bold text-sm mt-0.5">الاختبار الشامل</span>
+            </button>
+        </nav>
+
+        <!-- حاوية العرض الديناميكي للأقسام -->
+        <div id="content-area" class="fade-in"></div>
+
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs sm:text-sm text-slate-500">
+            منصة المراجعة التفاعلية للرياضيات • صُممت لمساعدتك على تنظيم وقتك وإتقان المفاهيم خطوة بخطوة
+        </div>
+    </footer>
+
+    <!-- صندوق رسائل مخصص بديل عن alert -->
+    <div id="toast-box" class="fixed bottom-5 left-5 z-50 hidden transform transition-all duration-300">
+        <div class="bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 border border-slate-700">
+            <span id="toast-icon" class="text-lg">💡</span>
+            <p id="toast-msg" class="text-sm font-medium"></p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. إدارة حالة التطبيق وبيانات المراجعة
+        // ==========================================
+        let totalSeconds = 3 * 60 * 60; // 3 ساعات بالثواني
+        let timerInterval = null;
+        let isTimerRunning = false;
+        let currentTab = 'plan';
+        const solvedQuestions = new Set(); // لتتبع الأسئلة المحلولة بنجاح في الدروس
+
+        // حالة الاختبار النهائي (20 سؤالاً × 2 نقطة = 40 نقطة)
+        let examUserAnswers = {};
+        let examSubmitted = false;
+        let examShuffledQuestions = [];
+
+        // قاعدة بيانات أسئلة الاختبار النهائي (60 دقيقة - 40 نقطة)
+        const fullExamQuestions = [
+            // القسم الأول: الاختيار من متعدد (12 سؤالاً)
+            {
+                id: "ex_1", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "خصائص الدوال التربيعية ورأس القطع المكافئ",
+                text: "السؤال 1 – إيجاد القيمة الصغرى: لدينا الدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = 2(x + 1)² - 7</span>، ما القيمة الصغرى للدالة؟",
+                options: [
+                    { text: "<span class='math-ltr'>-1</span>", correct: false },
+                    { text: "<span class='math-ltr'>-7</span>", correct: true },
+                    { text: "<span class='math-ltr'>2</span>", correct: false },
+                    { text: "<span class='math-ltr'>7</span>", correct: false }
+                ],
+                explanation: "الدالة مكتوبة بصيغة الرأس <span class='math-ltr'>f(x) = a(x - h)² + k</span> حيث الرأس <span class='math-ltr'>(-1, -7)</span> و <span class='math-ltr'>a = 2 > 0</span>، لذا القيمة الصغرى هي <span class='math-ltr'>k = -7</span>."
+            },
+            {
+                id: "ex_2", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "حل المعادلات التربيعية والجذور",
+                text: "السؤال 2 – حل معادلة تربيعية: أي القيم الآتية تمثل حلول المعادلة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>x² - 5x + 6 = 0</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>x = 1, x = 6</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = -2, x = -3</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = 2, x = 3</span>", correct: true },
+                    { text: "<span class='math-ltr'>x = -1, x = 6</span>", correct: false }
+                ],
+                explanation: "بالتحليل إلى عوامل: <span class='math-ltr'>(x - 2)(x - 3) = 0</span>، ومنه <span class='math-ltr'>x = 2</span> أو <span class='math-ltr'>x = 3</span>."
+            },
+            {
+                id: "ex_3", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "حل المعادلات التربيعية والجذور",
+                text: "السؤال 3 – الربط بين الجذور والمعادلة: إذا كان جذرا معادلة تربيعية هما <span class='math-ltr font-bold'>x = -2</span> و <span class='math-ltr font-bold'>x = 5</span>، فأي المعادلات الآتية تمثلها؟",
+                options: [
+                    { text: "<span class='math-ltr'>(x - 2)(x + 5) = 0</span>", correct: false },
+                    { text: "<span class='math-ltr'>(x + 2)(x - 5) = 0</span>", correct: true },
+                    { text: "<span class='math-ltr'>(x + 2)(x + 5) = 0</span>", correct: false },
+                    { text: "<span class='math-ltr'>(x - 2)(x - 5) = 0</span>", correct: false }
+                ],
+                explanation: "لكل جذر <span class='math-ltr'>r</span> يكون العامل <span class='math-ltr'>(x - r)</span>؛ إذن العوامل هي <span class='math-ltr'>(x - (-2))(x - 5) = (x + 2)(x - 5) = 0</span>."
+            },
+            {
+                id: "ex_4", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "خصائص الدوال التربيعية ورأس القطع المكافئ",
+                text: "السؤال 4 – تحليل خصائص الدالة: لدينا الدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = x² - 4x + 1</span>، ما إحداثيات رأس القطع المكافئ؟",
+                options: [
+                    { text: "<span class='math-ltr'>(2, -3)</span>", correct: true },
+                    { text: "<span class='math-ltr'>(-2, -3)</span>", correct: false },
+                    { text: "<span class='math-ltr'>(2, 3)</span>", correct: false },
+                    { text: "<span class='math-ltr'>(-2, 1)</span>", correct: false }
+                ],
+                explanation: "الإحداثي السيني <span class='math-ltr'>x = -b/(2a) = 4/2 = 2</span>، وبالتعويض: <span class='math-ltr'>f(2) = 2² - 4(2) + 1 = 4 - 8 + 1 = -3</span>. الرأس <span class='math-ltr'>(2, -3)</span>."
+            },
+            {
+                id: "ex_5", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "التحويلات وتفسير النماذج التربيعية",
+                text: "السؤال 5 – تطبيقات الدالة التربيعية: يمثل ارتفاع كرة بعد قذفها النموذج <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>h(t) = -4t² + 16t + 2</span>، ما أقصى ارتفاع تصل إليه الكرة؟",
+                options: [
+                    { text: "16 مترًا", correct: false },
+                    { text: "18 مترًا", correct: true },
+                    { text: "20 مترًا", correct: false },
+                    { text: "22 مترًا", correct: false }
+                ],
+                explanation: "زمن أقصى ارتفاع <span class='math-ltr'>t = -16 / (2 × -4) = 2</span> ثانية. أقصى ارتفاع <span class='math-ltr'>h(2) = -4(4) + 16(2) + 2 = -16 + 32 + 2 = 18</span> مترًا."
+            },
+            {
+                id: "ex_6", section: "mcq", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "التحويلات وتفسير النماذج التربيعية",
+                text: "السؤال 6 – مقارنة التمثيلات البيانية: أي الدوال الآتية يمثل منحناها قطعًا مكافئًا مفتوحًا للأسفل وأكثر ضيقًا من منحنى <span class='math-ltr font-bold'>f(x) = x²</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>g(x) = (1/2)x²</span>", correct: false },
+                    { text: "<span class='math-ltr'>g(x) = -x²</span>", correct: false },
+                    { text: "<span class='math-ltr'>g(x) = -3x²</span>", correct: true },
+                    { text: "<span class='math-ltr'>g(x) = 3x²</span>", correct: false }
+                ],
+                explanation: "مفتوح للأسفل يعني <span class='math-ltr'>a < 0</span>، وأكثر ضيقًا (توسع رأسي) يعني <span class='math-ltr'>|a| > 1</span>، وهذا يتحقق في <span class='math-ltr'>g(x) = -3x²</span>."
+            },
+            {
+                id: "ex_7", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال والمعادلات الكسرية",
+                text: "السؤال 7 – تحديد المجال: ما مجال الدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = 7 / (x² - 25)</span>؟",
+                options: [
+                    { text: "جميع الأعداد الحقيقية ما عدا <span class='math-ltr'>5</span>", correct: false },
+                    { text: "جميع الأعداد الحقيقية ما عدا <span class='math-ltr'>-5</span>", correct: false },
+                    { text: "جميع الأعداد الحقيقية ما عدا <span class='math-ltr'>5</span> و <span class='math-ltr'>-5</span>", correct: true },
+                    { text: "جميع الأعداد الحقيقية", correct: false }
+                ],
+                explanation: "نستثني أصفار المقام: <span class='math-ltr'>x² - 25 = 0 ⇒ x² = 25 ⇒ x = ±5</span>."
+            },
+            {
+                id: "ex_8", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال والمعادلات الكسرية",
+                text: "السؤال 8 – التعويض في الدالة الكسرية: إذا كانت <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = (2x + 1) / (x - 3)</span>، فما قيمة <span class='math-ltr font-bold'>f(1)</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>-3/2</span>", correct: true },
+                    { text: "<span class='math-ltr'>3/2</span>", correct: false },
+                    { text: "<span class='math-ltr'>-2</span>", correct: false },
+                    { text: "<span class='math-ltr'>2</span>", correct: false }
+                ],
+                explanation: "بالتعويض عن <span class='math-ltr'>x = 1</span>: <span class='math-ltr'>f(1) = (2(1) + 1) / (1 - 3) = 3 / (-2) = -3/2</span>."
+            },
+            {
+                id: "ex_9", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال والمعادلات الكسرية",
+                text: "السؤال 9 – حل معادلة كسرية: حل المعادلة الآتية <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>4 / (x + 1) = 2</span>:",
+                options: [
+                    { text: "<span class='math-ltr'>x = 0</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = 1</span>", correct: true },
+                    { text: "<span class='math-ltr'>x = 2</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = -1</span>", correct: false }
+                ],
+                explanation: "بالضرب التبادلي: <span class='math-ltr'>2(x + 1) = 4 ⇒ x + 1 = 2 ⇒ x = 1</span> (وهو لا يساوي القيمة المستثناة <span class='math-ltr'>-1</span>)."
+            },
+            {
+                id: "ex_10", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال الجذرية ومجالها وتحويلاتها",
+                text: "السؤال 10 – تحديد مجال الدالة الجذرية: ما مجال الدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = √(3x - 12)</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>x ≥ 4</span>", correct: true },
+                    { text: "<span class='math-ltr'>x ≤ 4</span>", correct: false },
+                    { text: "<span class='math-ltr'>x > 4</span>", correct: false },
+                    { text: "جميع الأعداد الحقيقية", correct: false }
+                ],
+                explanation: "ما تحت الجذر التربيعي يجب أن يكون غير سالب: <span class='math-ltr'>3x - 12 ≥ 0 ⇒ 3x ≥ 12 ⇒ x ≥ 4</span>."
+            },
+            {
+                id: "ex_11", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "حل المعادلات الجذرية",
+                text: "السؤال 11 – حل معادلة جذرية: ما حل المعادلة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>√(x + 5) = 4</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>x = 9</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = 11</span>", correct: true },
+                    { text: "<span class='math-ltr'>x = 16</span>", correct: false },
+                    { text: "<span class='math-ltr'>x = 21</span>", correct: false }
+                ],
+                explanation: "بتربيع الطرفين: <span class='math-ltr'>x + 5 = 16 ⇒ x = 11</span>. وبالتحقق: <span class='math-ltr'>√(11 + 5) = √16 = 4</span>."
+            },
+            {
+                id: "ex_12", section: "mcq", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال الجذرية ومجالها وتحويلاتها",
+                text: "السؤال 12 – فهم التحويلات على الدالة الجذرية: إذا كانت <span class='math-ltr font-bold'>f(x) = √x</span> و <span class='math-ltr font-bold'>g(x) = √(x - 2) + 3</span>، فما إحداثيات نقطة بداية منحنى <span class='math-ltr font-bold'>g</span>؟",
+                options: [
+                    { text: "<span class='math-ltr'>(-2, 3)</span>", correct: false },
+                    { text: "<span class='math-ltr'>(2, -3)</span>", correct: false },
+                    { text: "<span class='math-ltr'>(2, 3)</span>", correct: true },
+                    { text: "<span class='math-ltr'>(-2, -3)</span>", correct: false }
+                ],
+                explanation: "إزاحة وحدتين لليمين (<span class='math-ltr'>h = 2</span>) و 3 وحدات للأعلى (<span class='math-ltr'>k = 3</span>)، فتكون نقطة البداية <span class='math-ltr'>(2, 3)</span>."
+            },
+
+            // القسم الثاني: صحيح أم خطأ (8 أسئلة)
+            {
+                id: "ex_13", section: "tf", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "خصائص الدوال التربيعية ورأس القطع المكافئ",
+                text: "السؤال 13: إذا كانت <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = (x + 3)² + 1</span>، فإن القيمة الصغرى للدالة تساوي <span class='math-ltr font-bold'>1</span>.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ معامل القوس موجب (<span class='math-ltr'>a = 1 > 0</span>) وإحداثي الرأس الصادي <span class='math-ltr'>k = 1</span> يمثل القيمة الصغرى."
+            },
+            {
+                id: "ex_14", section: "tf", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "خصائص الدوال التربيعية ورأس القطع المكافئ",
+                text: "السؤال 14: إذا كانت <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = -2(x - 4)² + 6</span>، فإن القيمة العظمى للدالة تساوي <span class='math-ltr font-bold'>6</span>.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ لأن <span class='math-ltr'>a = -2 < 0</span> فالمنحنى مفتوح للأسفل ورأسه <span class='math-ltr'>(4, 6)</span>، لذا القيمة العظمى هي <span class='math-ltr'>6</span>."
+            },
+            {
+                id: "ex_15", section: "tf", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "حل المعادلات التربيعية والجذور",
+                text: "السؤال 15: المعادلة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>x² + 1 = 0</span> ليس لها حلول حقيقية.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ لأن <span class='math-ltr'>x² = -1</span> ولا يوجد عدد حقيقي مربعه سالب (المميز سالب)."
+            },
+            {
+                id: "ex_16", section: "tf", unit: "الوحدة الأولى: الدوال والمعادلات التربيعية",
+                skill: "حل المعادلات التربيعية والجذور",
+                text: "السؤال 16: إذا قطع منحنى الدالة التربيعية محور <span class='math-ltr font-bold'>x</span> في نقطة واحدة فقط، فإن المعادلة التربيعية المرتبطة بها لها جذر حقيقي مكرر.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ التماس مع محور <span class='math-ltr'>x</span> في نقطة واحدة يعني أن المميز يساوي صفراً ويوجد جذر حقيقي واحد مكرر."
+            },
+            {
+                id: "ex_17", section: "tf", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال والمعادلات الكسرية",
+                text: "السؤال 17: إذا كانت <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = 3 / (x + 6)</span>، فإن القيمة <span class='math-ltr font-bold'>x = -6</span> لا تنتمي إلى مجال الدالة.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ لأن <span class='math-ltr'>x = -6</span> تجعل المقام يساوي صفراً والقسمة على صفر غير معرّفة."
+            },
+            {
+                id: "ex_18", section: "tf", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "الدوال الجذرية ومجالها وتحويلاتها",
+                text: "السؤال 18: مجال الدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = √(x - 1)</span> يشمل جميع قيم <span class='math-ltr font-bold'>x</span> الأصغر من <span class='math-ltr font-bold'>1</span>.",
+                options: [
+                    { text: "صحيح", correct: false },
+                    { text: "خطأ", correct: true }
+                ],
+                explanation: "خطأ؛ مجال الدالة يشمل جميع قيم <span class='math-ltr'>x</span> الأكبر من أو تساوي <span class='math-ltr'>1</span> (<span class='math-ltr'>x ≥ 1</span>)، لأن القيم الأصغر من 1 تجعل ما تحت الجذر سالباً."
+            },
+            {
+                id: "ex_19", section: "tf", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "حل المعادلات الجذرية",
+                text: "السؤال 19: قيمة الجذر التربيعي الرئيسي للعدد <span class='math-ltr font-bold'>9</span> هي <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>√9 = ±3</span>.",
+                options: [
+                    { text: "صحيح", correct: false },
+                    { text: "خطأ", correct: true }
+                ],
+                explanation: "خطأ؛ رمز الجذر التربيعي الرئيسي <span class='math-ltr'>√9</span> يعطي القيمة الموجبة فقط وهي <span class='math-ltr'>3</span>."
+            },
+            {
+                id: "ex_20", section: "tf", unit: "الوحدة الثانية: الدوال الكسرية والجذرية",
+                skill: "حل المعادلات الجذرية",
+                text: "السؤال 20: إذا كانت <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>√x = 5</span>، فإن حل المعادلة هو <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>x = 25</span>.",
+                options: [
+                    { text: "صحيح", correct: true },
+                    { text: "خطأ", correct: false }
+                ],
+                explanation: "صحيح؛ بتربيع طرفي المعادلة ينتج <span class='math-ltr'>x = 5² = 25</span>."
+            }
+        ];
+
+        // قاعدة بيانات الأسئلة التفاعلية لكل درس
+        const sectionsData = {
+            u1d1: {
+                unit: "الوحدة ١: الدوال والمعادلات التربيعية",
+                title: "الدرس 1: فهم الدوال التربيعية ورسوماتها البيانية",
+                duration: "35 دقيقة (15 دقيقة مفاهيم + 20 دقيقة تدريب)",
+                themeColor: "indigo",
+                summary: [
+                    {
+                        heading: "الصورة القياسية وصيغة الرأس",
+                        points: [
+                            "الصورة القياسية: <span class='math-ltr font-bold text-indigo-700'>f(x) = ax² + bx + c</span> حيث المقطع الصادي هو <span class='math-ltr font-bold'>(0, c)</span>.",
+                            "صيغة الرأس: <span class='math-ltr font-bold text-indigo-700'>f(x) = a(x - h)² + k</span> حيث الرأس هو <span class='math-ltr font-bold'>(h, k)</span>."
+                        ]
+                    },
+                    {
+                        heading: "محور التماثل والقيم العظمى والصغرى",
+                        points: [
+                            "معادلة محور التماثل: <span class='math-ltr font-bold text-indigo-700'>x = -b / (2a)</span>.",
+                            "إذا كان <span class='math-ltr font-bold'>a > 0</span>: الفتحة للأعلى وللدالة <b>قيمة صغرى</b> تساوي <span class='math-ltr font-bold'>k</span>.",
+                            "إذا كان <span class='math-ltr font-bold'>a < 0</span>: الفتحة للأسفل وللدالة <b>قيمة عظمى</b> تساوي <span class='math-ltr font-bold'>k</span>."
+                        ]
+                    }
+                ],
+                questions: [
+                    {
+                        id: "q_u1d1_1",
+                        text: "للدالة التربيعية <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = -2x² + 8x - 5</span>، ما هي إحداثيات الرأس <span class='math-ltr'>(h, k)</span>؟",
+                        hint: "أولاً أوجد <span class='math-ltr'>x = -b / (2a) = -8 / (2 × -2) = 2</span>، ثم عوّض بـ <span class='math-ltr'>x = 2</span> في الدالة لحساب <span class='math-ltr'>f(2)</span>.",
+                        options: [
+                            { text: "<span class='math-ltr'>(2, 3)</span>", correct: true },
+                            { text: "<span class='math-ltr'>(-2, -29)</span>", correct: false },
+                            { text: "<span class='math-ltr'>(2, -5)</span>", correct: false },
+                            { text: "<span class='math-ltr'>(4, -5)</span>", correct: false }
+                        ],
+                        explanation: "بما أن <span class='math-ltr'>a = -2, b = 8</span> فإن محور التماثل <span class='math-ltr'>x = -8 / -4 = 2</span>. وبالتعويض: <span class='math-ltr'>f(2) = -2(4) + 8(2) - 5 = -8 + 16 - 5 = 3</span>. إذن الرأس هو <span class='math-ltr'>(2, 3)</span>."
+                    },
+                    {
+                        id: "q_u1d1_2",
+                        text: "ما هي قاعدة الدالة التربيعية التي رأسها <span class='math-ltr font-bold'>(3, -4)</span> وتمر بالنقطة <span class='math-ltr font-bold'>(5, 4)</span>؟",
+                        hint: "اكتب صيغة الرأس <span class='math-ltr'>f(x) = a(x - 3)² - 4</span>، ثم عوّض عن <span class='math-ltr'>x = 5</span> و <span class='math-ltr'>f(x) = 4</span> لإيجاد قيمة <span class='math-ltr'>a</span>.",
+                        options: [
+                            { text: "<span class='math-ltr'>f(x) = 2(x - 3)² - 4</span>", correct: true },
+                            { text: "<span class='math-ltr'>f(x) = (x - 3)² - 4</span>", correct: false },
+                            { text: "<span class='math-ltr'>f(x) = 2(x + 3)² - 4</span>", correct: false },
+                            { text: "<span class='math-ltr'>f(x) = -2(x - 3)² + 4</span>", correct: false }
+                        ],
+                        explanation: "بالتعويض بالنقطة <span class='math-ltr'>(5, 4)</span>: <span class='math-ltr'>4 = a(5 - 3)² - 4 ⇒ 8 = 4a ⇒ a = 2</span>. فتصبح المعادلة <span class='math-ltr'>f(x) = 2(x - 3)² - 4</span>."
+                    },
+                    {
+                        id: "q_u1d1_3",
+                        text: "أي من العبارات التالية صحيحة حول الدالة <span class='math-ltr font-bold'>g(x) = 3x² - 6x + 7</span>؟",
+                        hint: "انظر إلى إشارة المعامل <span class='math-ltr'>a = 3</span>، وأوجد الإحداثي الصادي للرأس لتحديد القيمة الصغرى أو العظمى.",
+                        options: [
+                            { text: "للدالة قيمة صغرى تساوي <span class='math-ltr'>4</span>", correct: true },
+                            { text: "للدالة قيمة عظمى تساوي <span class='math-ltr'>4</span>", correct: false },
+                            { text: "للدالة قيمة صغرى تساوي <span class='math-ltr'>7</span>", correct: false },
+                            { text: "للدالة قيمة عظمى تساوي <span class='math-ltr'>1</span>", correct: false }
+                        ],
+                        explanation: "بما أن <span class='math-ltr'>a = 3 > 0</span> ففتحة القطع للأعلى وله قيمة صغرى. محور التماثل <span class='math-ltr'>x = 6 / 6 = 1</span>، والقيمة الصغرى <span class='math-ltr'>g(1) = 3(1) - 6(1) + 7 = 4</span>."
+                    }
+                ]
+            },
+            u1d6: {
+                unit: "الوحدة ١: الدوال والمعادلات التربيعية",
+                title: "الدرس 6: حل التحويلات التربيعية والمتباينات",
+                duration: "40 دقيقة (15 دقيقة مفاهيم + 25 دقيقة تدريب)",
+                themeColor: "indigo",
+                summary: [
+                    {
+                        heading: "التحويلات الهندسية للدالة الأم f(x) = x²",
+                        points: [
+                            "في الصيغة <span class='math-ltr font-bold text-indigo-700'>g(x) = a(x - h)² + k</span>:",
+                            "<b>الإزاحة الأفقية:</b> <span class='math-ltr'>h</span> وحدات لليمين إذا كان <span class='math-ltr'>(x - h)</span>، ولليسار إذا كان <span class='math-ltr'>(x + h)</span>.",
+                            "<b>الإزاحة الرأسية:</b> <span class='math-ltr'>k</span> وحدات للأعلى (<span class='math-ltr'>+k</span>) أو للأسفل (<span class='math-ltr'>-k</span>).",
+                            "<b>التمدد والانعكاس:</b> انعكاس حول محور <span class='math-ltr'>x</span> إذا كان <span class='math-ltr'>a < 0</span>، وتوسع رأسي إذا كان <span class='math-ltr'>|a| > 1</span> وتضييق رأسي إذا كان <span class='math-ltr'>0 < |a| < 1</span>."
+                        ]
+                    },
+                    {
+                        heading: "خطوات حل المتباينات التربيعية",
+                        points: [
+                            "1. اجعل أحد الطرفين صفراً وحوّل المتباينة إلى معادلة لإيجاد الجذور (الأصفار).",
+                            "2. مثّل الجذور على خط الأعداد (دوائر مغلقة لـ <span class='math-ltr'>≤, ≥</span> ومفتوحة لـ <span class='math-ltr'><, ></span>).",
+                            "3. اختبر إشارة كل فترة وحدد الفترة التي تحقق إشارة المتباينة."
+                        ]
+                    }
+                ],
+                questions: [
+                    {
+                        id: "q_u1d6_1",
+                        text: "صف التحويلات الهندسية للدالة <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>g(x) = 0.5(x + 4)² - 3</span> مقارنة بالدالة الأم <span class='math-ltr'>f(x) = x²</span>:",
+                        hint: "تذكر أن الإشارة داخل القوس <span class='math-ltr'>(x + 4)</span> تعني <span class='math-ltr'>x - (-4)</span> أي إزاحة لليسار.",
+                        options: [
+                            { text: "تضييق رأسي بمعامل 0.5، وإزاحة 4 وحدات لليسار، و 3 وحدات للأسفل", correct: true },
+                            { text: "توسع رأسي بمعامل 0.5، وإزاحة 4 وحدات لليمين، و 3 وحدات للأسفل", correct: false },
+                            { text: "تضييق رأسي بمعامل 0.5، وإزاحة 4 وحدات لليمين، و 3 وحدات للأعلى", correct: false },
+                            { text: "انعكاس حول محور x، وإزاحة 4 وحدات لليسار، و 3 وحدات للأسفل", correct: false }
+                        ],
+                        explanation: "المعامل <span class='math-ltr'>a = 0.5</span> يقع بين 0 و 1 لذا هو تضييق رأسي. <span class='math-ltr'>(x + 4)</span> تعني 4 وحدات لليسار، و <span class='math-ltr'>-3</span> تعني 3 وحدات للأسفل."
+                    },
+                    {
+                        id: "q_u1d6_2",
+                        text: "ما هي مجموعة حل المتباينة التربيعية <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>x² - 5x - 6 ≤ 0</span>؟",
+                        hint: "حلل المقدار <span class='math-ltr'>(x - 6)(x + 1) = 0</span> لإيجاد الجذور <span class='math-ltr'>-1</span> و <span class='math-ltr'>6</span>، ثم اختبر الإشارة بينهما (مثلاً عند <span class='math-ltr'>x = 0</span>).",
+                        options: [
+                            { text: "<span class='math-ltr'>[-1, 6]</span>", correct: true },
+                            { text: "<span class='math-ltr'>(-∞, -1] ∪ [6, ∞)</span>", correct: false },
+                            { text: "<span class='math-ltr'>(-1, 6)</span>", correct: false },
+                            { text: "<span class='math-ltr'>[-6, 1]</span>", correct: false }
+                        ],
+                        explanation: "جذور المعادلة هي <span class='math-ltr'>x = 6</span> و <span class='math-ltr'>x = -1</span>. عند اختبار <span class='math-ltr'>x = 0</span> نجد <span class='math-ltr'>0 - 0 - 6 = -6 ≤ 0</span> (محققة). وبوجود علامة المساواة تكون الفترة مغلقة <span class='math-ltr'>[-1, 6]</span>."
+                    }
+                ]
+            },
+            u2d2: {
+                unit: "الوحدة ٢: الدوال الكسرية والجذرية",
+                title: "الدرس 2: حل المعادلات والمتباينات الكسرية",
+                duration: "30 دقيقة (10 دقائق مفاهيم + 20 دقيقة تدريب)",
+                themeColor: "teal",
+                summary: [
+                    {
+                        heading: "حل المعادلات الكسرية",
+                        points: [
+                            "1. حدد <b>القيم المستثناة</b> (أصفار المقامات) قبل البدء بالحل.",
+                            "2. اضرب جميع حدود المعادلة في المضاعف المشترك الأصغر (LCM) للمقامات للتخلص من الكسور.",
+                            "3. استبعد أي حل يطابق القيم المستثناة لأنه يعتبر <b>حلاً دخيلاً</b>."
+                        ]
+                    },
+                    {
+                        heading: "حل المتباينات الكسرية",
+                        points: [
+                            "1. اجعل الطرف الأيمن صفراً ووحّد المقامات في الطرف الأيسر.",
+                            "2. أوجد <b>أصفار البسط</b> و <b>أصفار المقام</b> ومثّلها على خط الأعداد.",
+                            "3. انتبه: دوائر أصفار المقام <b>دائماً مفتوحة</b> حتى لو احتوت المتباينة على <span class='math-ltr'>≤</span> أو <span class='math-ltr'>≥</span>."
+                        ]
+                    }
+                ],
+                questions: [
+                    {
+                        id: "q_u2d2_1",
+                        text: "ما هو حل المعادلة الكسرية: <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>3/(x - 2) + 1/x = 4/(x² - 2x)</span>؟",
+                        hint: "لاحظ أن <span class='math-ltr'>x² - 2x = x(x - 2)</span>. القيم المستثناة هي <span class='math-ltr'>x = 0, 2</span>. اضرب المعادلة كاملة في <span class='math-ltr'>x(x - 2)</span>.",
+                        options: [
+                            { text: "<span class='math-ltr'>x = 1.5</span> (أو <span class='math-ltr'>3/2</span>)", correct: true },
+                            { text: "<span class='math-ltr'>x = 2</span>", correct: false },
+                            { text: "<span class='math-ltr'>x = 0</span>", correct: false },
+                            { text: "لا يوجد حل", correct: false }
+                        ],
+                        explanation: "بالضرب في <span class='math-ltr'>x(x - 2)</span> نحصل على: <span class='math-ltr'>3x + (x - 2) = 4 ⇒ 4x - 2 = 4 ⇒ 4x = 6 ⇒ x = 1.5</span>. وبما أن <span class='math-ltr'>1.5</span> ليس ضمن القيم المستثناة <span class='math-ltr'>{0, 2}</span> فهو حل صحيح."
+                    },
+                    {
+                        id: "q_u2d2_2",
+                        text: "أوجد مجموعة حل المتباينة الكسرية: <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>(x + 3) / (x - 1) > 0</span>",
+                        hint: "صفر البسط هو <span class='math-ltr'>x = -3</span> وصفر المقام هو <span class='math-ltr'>x = 1</span>. قسّم خط الأعداد إلى 3 فترات واختبر الإشارة.",
+                        options: [
+                            { text: "<span class='math-ltr'>(-∞, -3) ∪ (1, ∞)</span>", correct: true },
+                            { text: "<span class='math-ltr'>(-3, 1)</span>", correct: false },
+                            { text: "<span class='math-ltr'>[-3, 1]</span>", correct: false },
+                            { text: "<span class='math-ltr'>(1, ∞)</span>", correct: false }
+                        ],
+                        explanation: "النقاط الحرجة هي <span class='math-ltr'>-3</span> و <span class='math-ltr'>1</span>. عند اختبار <span class='math-ltr'>x = 0</span> نحصل على <span class='math-ltr'>3 / -1 = -3 < 0</span> (غير محققة). بينما الفترات الخارجية تعطي قيماً موجبة: <span class='math-ltr'>(-∞, -3) ∪ (1, ∞)</span>."
+                    }
+                ]
+            },
+            u2d45: {
+                unit: "الوحدة ٢: الدوال الكسرية والجذرية",
+                title: "الدرسان 4 و 5: الدوال الجذرية وتبسيط وحل معادلاتها",
+                duration: "45 دقيقة (18 دقيقة مفاهيم + 27 دقيقة تدريب)",
+                themeColor: "teal",
+                summary: [
+                    {
+                        heading: "الدرس 4: خصائص دالة الجذر التربيعي f(x) = a√(x - h) + k",
+                        points: [
+                            "<b>نقطة البداية:</b> <span class='math-ltr font-bold text-teal-700'>(h, k)</span>.",
+                            "<b>المجال:</b> ما تحت الجذر أكبر من أو يساوي الصفر: <span class='math-ltr font-bold'>x - h ≥ 0 ⇒ [h, ∞)</span>.",
+                            "<b>المدى:</b> إذا كان <span class='math-ltr'>a > 0</span> فالمدى <span class='math-ltr font-bold'>[k, ∞)</span>، وإذا كان <span class='math-ltr'>a < 0</span> فالمدى <span class='math-ltr font-bold'>(-∞, k]</span>."
+                        ]
+                    },
+                    {
+                        heading: "الدرس 5: تبسيط وحل المعادلات الجذرية",
+                        points: [
+                            "<b>التبسيط:</b> أخرج المربعات الكاملة من تحت الجذر التربيعي (اقسم الأسس الزوجية على 2).",
+                            "<b>حل المعادلات:</b> 1) اعزل الجذر في طرف. 2) ارفع الطرفين لقوة دليل الجذر. 3) <b>تحقق بالتعويض</b> لاستبعاد الحلول الدخيلة."
+                        ]
+                    }
+                ],
+                questions: [
+                    {
+                        id: "q_u2d45_1",
+                        text: "حدد المجال والمدى للدالة الجذرية: <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>f(x) = -3√(x - 2) + 5</span>",
+                        hint: "اجعل ما تحت الجذر <span class='math-ltr'>x - 2 ≥ 0</span> لإيجاد المجال، ولاحظ أن <span class='math-ltr'>a = -3</span> (سالب) لتحديد اتجاه المدى من <span class='math-ltr'>k = 5</span>.",
+                        options: [
+                            { text: "المجال: <span class='math-ltr'>[2, ∞)</span> ، المدى: <span class='math-ltr'>(-∞, 5]</span>", correct: true },
+                            { text: "المجال: <span class='math-ltr'>[2, ∞)</span> ، المدى: <span class='math-ltr'>[5, ∞)</span>", correct: false },
+                            { text: "المجال: <span class='math-ltr'>[-2, ∞)</span> ، المدى: <span class='math-ltr'>(-∞, 5]</span>", correct: false },
+                            { text: "المجال: <span class='math-ltr'>(-∞, 2]</span> ، المدى: <span class='math-ltr'>[5, ∞)</span>", correct: false }
+                        ],
+                        explanation: "المجال: <span class='math-ltr'>x - 2 ≥ 0 ⇒ x ≥ 2</span> أي <span class='math-ltr'>[2, ∞)</span>. وبما أن <span class='math-ltr'>a = -3 < 0</span> ينعكس المنحنى للأسفل بدءاً من <span class='math-ltr'>k = 5</span> فيكون المدى <span class='math-ltr'>(-∞, 5]</span>."
+                    },
+                    {
+                        id: "q_u2d45_2",
+                        text: "بسّط التعبير الجذري التالي (حيث <span class='math-ltr'>x, y ≥ 0</span>): <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>√(48x⁵y⁴)</span>",
+                        hint: "حلل <span class='math-ltr'>48 = 16 × 3</span>، واكتب <span class='math-ltr'>x⁵ = x⁴ · x</span> ثم خذ الجذر التربيعي للعوامل المربعة.",
+                        options: [
+                            { text: "<span class='math-ltr'>4x²y²√(3x)</span>", correct: true },
+                            { text: "<span class='math-ltr'>16x²y²√(3x)</span>", correct: false },
+                            { text: "<span class='math-ltr'>4xy²√(3x³)</span>", correct: false },
+                            { text: "<span class='math-ltr'>2x²y²√(12x)</span>", correct: false }
+                        ],
+                        explanation: "<span class='math-ltr'>√(16 · 3 · x⁴ · x · y⁴) = 4x²y²√(3x)</span>."
+                    },
+                    {
+                        id: "q_u2d45_3",
+                        text: "ما هو الحل الصحيح للمعادلة الجذرية: <span class='math-ltr font-bold bg-slate-100 px-2 py-0.5 rounded'>√(2x + 3) = x</span>؟",
+                        hint: "ربّع الطرفين لتحصل على <span class='math-ltr'>2x + 3 = x²</span>، حل المعادلة التربيعية الناتجة، ثم عوّض بالحلين في المعادلة الأصلية للتحقق.",
+                        options: [
+                            { text: "<span class='math-ltr'>x = 3</span> فقط (لأن <span class='math-ltr'>x = -1</span> حل دخيل)", correct: true },
+                            { text: "<span class='math-ltr'>x = 3</span> و <span class='math-ltr'>x = -1</span>", correct: false },
+                            { text: "<span class='math-ltr'>x = -1</span> فقط", correct: false },
+                            { text: "لا يوجد حل حقيقي", correct: false }
+                        ],
+                        explanation: "بتربيع الطرفين: <span class='math-ltr'>x² - 2x - 3 = 0 ⇒ (x - 3)(x + 1) = 0</span>. عند التعويض بـ <span class='math-ltr'>x = -1</span> نجد <span class='math-ltr'>√1 = -1</span> (خطأ، حل دخيل). وعند <span class='math-ltr'>x = 3</span> نجد <span class='math-ltr'>√9 = 3</span> (صحيح)."
+                    }
+                ]
+            }
+        };
+
+        // ==========================================
+        // 2. إدارة الاختبار الشامل (40 نقطة - 20 سؤالاً)
+        // ==========================================
+        function initExam(shuffle = false) {
+            examUserAnswers = {};
+            examSubmitted = false;
+            
+            // نسخ الأسئلة وتطبيق الخلط العشوائي إذا طُلب (مع إبقاء خيارات صح/خطأ مرتبة)
+            examShuffledQuestions = fullExamQuestions.map(q => {
+                const clonedOptions = q.options.map((opt, idx) => ({ ...opt, origIdx: idx }));
+                if (shuffle && q.section === 'mcq') {
+                    for (let i = clonedOptions.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [clonedOptions[i], clonedOptions[j]] = [clonedOptions[j], clonedOptions[i]];
+                    }
+                }
+                return { ...q, displayOptions: clonedOptions };
+            });
+
+            if (shuffle) {
+                const mcqPart = examShuffledQuestions.filter(q => q.section === 'mcq');
+                const tfPart = examShuffledQuestions.filter(q => q.section === 'tf');
+                for (let i = mcqPart.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [mcqPart[i], mcqPart[j]] = [mcqPart[j], mcqPart[i]];
+                }
+                for (let i = tfPart.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [tfPart[i], tfPart[j]] = [tfPart[j], tfPart[i]];
+                }
+                examShuffledQuestions = [...mcqPart, ...tfPart];
+                showToast("تم تفعيل الترتيب العشوائي للأسئلة والخيارات!", "🔀");
+            }
+        }
+
+        function selectExamOption(qId, displayOptIdx) {
+            if (examSubmitted) return;
+            examUserAnswers[qId] = displayOptIdx;
+            renderExamView(document.getElementById('content-area'));
+        }
+
+        function submitFullExam() {
+            const answeredCount = Object.keys(examUserAnswers).length;
+            if (answeredCount < examShuffledQuestions.length) {
+                const remaining = examShuffledQuestions.length - answeredCount;
+                showToast(`تبقى لديك ${remaining} سؤال لم تجب عنه! أكمل جميع الأسئلة أو اضغط تسليم مرة أخرى للتأكيد.`, "⚠️");
+                // السماح بالتسليم في النقرة الثانية إذا أراد الطالب
+                if (!window._confirmSubmitOnce) {
+                    window._confirmSubmitOnce = true;
+                    setTimeout(() => { window._confirmSubmitOnce = false; }, 5000);
+                    return;
+                }
+            }
+            window._confirmSubmitOnce = false;
+            examSubmitted = true;
+            renderExamView(document.getElementById('content-area'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast("تم تسليم الاختبار واحتساب الدرجة من 40!", "🎓");
+        }
+
+        function renderExamView(container) {
+            if (examShuffledQuestions.length === 0) {
+                initExam(false);
+            }
+
+            const answeredCount = Object.keys(examUserAnswers).length;
+            let totalScore = 0;
+            let mcqScore = 0;
+            let tfScore = 0;
+
+            if (examSubmitted) {
+                examShuffledQuestions.forEach(q => {
+                    const chosenIdx = examUserAnswers[q.id];
+                    if (chosenIdx !== undefined && q.displayOptions[chosenIdx]?.correct) {
+                        totalScore += 2;
+                        if (q.section === 'mcq') mcqScore += 2;
+                        else tfScore += 2;
+                    }
+                });
+            }
+
+            const renderQuestionCard = (q, index) => {
+                const chosenIdx = examUserAnswers[q.id];
+                const isAnswered = chosenIdx !== undefined;
+                const isCorrect = examSubmitted && isAnswered && q.displayOptions[chosenIdx]?.correct;
+
+                let cardBorder = "border-slate-200";
+                if (examSubmitted) {
+                    cardBorder = isCorrect ? "border-emerald-400" : "border-rose-400";
+                } else if (isAnswered) {
+                    cardBorder = "border-indigo-400";
+                }
+
+                return `
+                    <div class="bg-white rounded-2xl shadow-sm border-2 ${cardBorder} p-5 sm:p-6 transition">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-slate-800 text-white text-xs font-bold px-2.5 py-1 rounded-lg">#${index + 1}</span>
+                                <span class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">${q.unit}</span>
+                            </div>
+                            <span class="text-xs font-bold ${examSubmitted ? (isCorrect ? 'text-emerald-700 bg-emerald-100' : 'text-rose-700 bg-rose-100') : 'text-slate-500 bg-slate-100'} px-3 py-1 rounded-full">
+                                ${examSubmitted ? (isCorrect ? '✓ 2 / 2 نقطة' : '✗ 0 / 2 نقطة') : 'نقطتان (2)'}
+                            </span>
+                        </div>
+
+                        <p class="text-base sm:text-lg font-bold text-slate-900 mb-4 leading-relaxed">${q.text}</p>
+
+                        <div class="grid grid-cols-1 ${q.section === 'mcq' ? 'sm:grid-cols-2' : 'grid-cols-2'} gap-3">
+                            ${q.displayOptions.map((opt, optIdx) => {
+                                const isSelected = chosenIdx === optIdx;
+                                let btnStyle = "border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 text-slate-800";
+                                let badge = "";
+
+                                if (!examSubmitted) {
+                                    if (isSelected) {
+                                        btnStyle = "border-indigo-600 bg-indigo-50 text-indigo-950 ring-2 ring-indigo-200";
+                                        badge = "●";
+                                    }
+                                } else {
+                                    if (opt.correct) {
+                                        btnStyle = "border-emerald-500 bg-emerald-50 text-emerald-950 font-bold";
+                                        badge = "✔️";
+                                    } else if (isSelected && !opt.correct) {
+                                        btnStyle = "border-rose-500 bg-rose-50 text-rose-950";
+                                        badge = "❌";
+                                    } else {
+                                        btnStyle = "border-slate-200 opacity-65 text-slate-600";
+                                    }
+                                }
+
+                                const letterLabels = ['أ.', 'ب.', 'ج.', 'د.'];
+                                const prefix = q.section === 'mcq' ? `<span class="font-extrabold text-indigo-600 ml-1.5">${letterLabels[optIdx]}</span>` : '';
+
+                                return `
+                                    <button onclick="selectExamOption('${q.id}', ${optIdx})" ${examSubmitted ? 'disabled' : ''}
+                                        class="text-right p-3.5 rounded-xl border-2 ${btnStyle} font-semibold text-sm sm:text-base transition flex items-center justify-between">
+                                        <span>${prefix}${opt.text}</span>
+                                        <span class="text-base">${badge}</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        ${examSubmitted ? `
+                            <div class="mt-4 bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs sm:text-sm text-slate-800">
+                                <span class="font-extrabold text-indigo-800">التفسير (${q.skill}): </span>
+                                <span>${q.explanation}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            };
+
+            const mcqList = examShuffledQuestions.filter(q => q.section === 'mcq');
+            const tfList = examShuffledQuestions.filter(q => q.section === 'tf');
+
+            container.innerHTML = `
+                <!-- ترويسة الاختبار وإرشادات المدة -->
+                <div class="bg-white rounded-2xl shadow-sm border border-amber-200 p-6 mb-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-100 pb-4 mb-4">
+                        <div>
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full">الاختبار التقييمي الشامل</span>
+                                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">⏱️ المدة المقترحة: 60 دقيقة</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">الدرجة الكلية: 40 نقطة</span>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">اختبار الوحدتين: الدوال التربيعية والكسرية والجذرية</h2>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">لا تظهر الإجابات الصحيحة أثناء الحل. راجع إجاباتك جيداً قبل الضغط على زر التسليم النهائي.</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="initExam(true); renderExamView(document.getElementById('content-area'));" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5 border border-slate-300">
+                                <span>🔀</span>
+                                <span>خلط الأسئلة والخيارات عشوائياً</span>
+                            </button>
+                            ${examSubmitted ? `
+                                <button onclick="initExam(false); renderExamView(document.getElementById('content-area'));" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
+                                    إعادة الاختبار من جديد
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- بطاقة النتيجة النهائية بعد التسليم أو شريط حالة الإجابة أثناء الحل -->
+                    ${examSubmitted ? `
+                        <div class="bg-gradient-to-l from-indigo-900 to-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-md">
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div>
+                                    <span class="text-amber-300 text-xs font-bold uppercase tracking-wider">النتيجة النهائية للاختبار</span>
+                                    <h3 class="text-2xl sm:text-3xl font-extrabold mt-1">حصلت على <span class="text-emerald-400 math-ltr">${totalScore} / 40</span> نقطة (${Math.round((totalScore/40)*100)}%)</h3>
+                                    <p class="text-indigo-200 text-xs sm:text-sm mt-1">
+                                        ${totalScore >= 36 ? 'ممتاز! إتقان رائع لجميع مهارات الوحدتين.' : totalScore >= 28 ? 'جيد جداً! راجع الأسئلة المخطوءة لتثبيت المفاهيم.' : 'تحتاج إلى مراجعة إضافية للدروس، راجع التفسير أسفل كل سؤال.'}
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 text-center w-full sm:w-auto">
+                                    <div class="bg-white/10 rounded-xl px-4 py-2.5 border border-white/15">
+                                        <div class="text-xs text-indigo-200">الاختيار من متعدد</div>
+                                        <div class="font-extrabold text-lg math-ltr text-white">${mcqScore} / 24</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl px-4 py-2.5 border border-white/15">
+                                        <div class="text-xs text-indigo-200">صحيح أم خطأ</div>
+                                        <div class="font-extrabold text-lg math-ltr text-white">${tfScore} / 16</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="flex flex-wrap items-center justify-between gap-3 bg-amber-50/70 border border-amber-200/80 rounded-xl px-4 py-3 text-xs sm:text-sm">
+                            <span class="font-bold text-amber-950">الأسئلة المُجاب عنها: <span class="math-ltr text-indigo-700 font-extrabold">${answeredCount} / 20</span></span>
+                            <span class="text-amber-800">💡 نصيحة: خصص آخر 5 دقائق لمراجعة إجاباتك قبل التسليم.</span>
+                        </div>
+                    `}
+                </div>
+
+                <!-- القسم الأول: الاختيار من متعدد -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between bg-indigo-50 border-r-4 border-indigo-600 px-4 py-3 rounded-xl mb-4">
+                        <div>
+                            <h3 class="font-extrabold text-base sm:text-lg text-indigo-950">القسم الأول: الاختيار من متعدد</h3>
+                            <p class="text-xs text-indigo-700">12 سؤالًا × نقطتين = 24 نقطة • اختر الإجابة الصحيحة لكل سؤال</p>
+                        </div>
+                        <span class="font-extrabold text-indigo-800 text-sm">24 نقطة</span>
+                    </div>
+                    <div class="space-y-4">
+                        ${mcqList.map((q, idx) => renderQuestionCard(q, idx)).join('')}
+                    </div>
+                </div>
+
+                <!-- القسم الثاني: صحيح أم خطأ -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between bg-teal-50 border-r-4 border-teal-600 px-4 py-3 rounded-xl mb-4">
+                        <div>
+                            <h3 class="font-extrabold text-base sm:text-lg text-teal-950">القسم الثاني: صحيح أم خطأ؟</h3>
+                            <p class="text-xs text-teal-700">8 أسئلة × نقطتين = 16 نقطة • حدد ما إذا كانت كل عبارة صحيحة أم خاطئة</p>
+                        </div>
+                        <span class="font-extrabold text-teal-800 text-sm">16 نقطة</span>
+                    </div>
+                    <div class="space-y-4">
+                        ${tfList.map((q, idx) => renderQuestionCard(q, idx + 12)).join('')}
+                    </div>
+                </div>
+
+                <!-- زر التسليم النهائي وجدول توزيع العلامات والمهارات -->
+                ${!examSubmitted ? `
+                    <div class="bg-white rounded-2xl shadow-md border-2 border-indigo-200 p-6 text-center mb-8">
+                        <p class="text-sm text-slate-600 mb-3">أجبت على <strong>${answeredCount}</strong> من أصل <strong>20</strong> سؤالاً. عند التسليم ستظهر درجتك وتفسير كل سؤال.</p>
+                        <button onclick="submitFullExam()" class="bg-gradient-to-l from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base sm:text-lg px-8 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                            تسليم الاختبار وعرض النتيجة (من 40) ✓
+                        </button>
+                    </div>
+                ` : ''}
+
+                <!-- جداول توزيع العلامات والمهارات -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2">
+                            <span>📊</span>
+                            <span>توزيع العلامات</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs sm:text-sm text-right border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                        <th class="p-2.5 font-bold">القسم</th>
+                                        <th class="p-2.5 font-bold">عدد الأسئلة</th>
+                                        <th class="p-2.5 font-bold">العلامة</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr><td class="p-2.5">الاختيار من متعدد</td><td class="p-2.5 math-ltr">12</td><td class="p-2.5 font-bold">24</td></tr>
+                                    <tr><td class="p-2.5">صحيح أو خطأ</td><td class="p-2.5 math-ltr">8</td><td class="p-2.5 font-bold">16</td></tr>
+                                    <tr class="bg-indigo-50/60 font-extrabold text-indigo-950"><td class="p-2.5">المجموع</td><td class="p-2.5 math-ltr">20</td><td class="p-2.5">40</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-extrabold text-slate-900 text-sm sm:text-base mb-3 flex items-center gap-2">
+                            <span>🎯</span>
+                            <span>جدول توزيع المهارات</span>
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs sm:text-sm text-right border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                        <th class="p-2 font-bold">المهارة</th>
+                                        <th class="p-2 font-bold">الأسئلة</th>
+                                        <th class="p-2 font-bold">النقاط</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-xs">
+                                    <tr><td class="p-2">خصائص الدوال التربيعية ورأس القطع المكافئ</td><td class="p-2">1، 4، 13، 14</td><td class="p-2 font-bold">8</td></tr>
+                                    <tr><td class="p-2">حل المعادلات التربيعية والجذور</td><td class="p-2">2، 3، 15، 16</td><td class="p-2 font-bold">8</td></tr>
+                                    <tr><td class="p-2">التحويلات وتفسير النماذج التربيعية</td><td class="p-2">5، 6</td><td class="p-2 font-bold">4</td></tr>
+                                    <tr><td class="p-2">الدوال والمعادلات الكسرية</td><td class="p-2">7، 8، 9، 17</td><td class="p-2 font-bold">8</td></tr>
+                                    <tr><td class="p-2">الدوال الجذرية ومجالها وتحويلاتها</td><td class="p-2">10، 12، 18</td><td class="p-2 font-bold">6</td></tr>
+                                    <tr><td class="p-2">حل المعادلات الجذرية</td><td class="p-2">11، 19، 20</td><td class="p-2 font-bold">6</td></tr>
+                                    <tr class="bg-indigo-50/60 font-extrabold text-indigo-950"><td class="p-2">المجموع</td><td class="p-2">20 سؤالاً</td><td class="p-2">40</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 3. دوال المؤقت الزمني (3 ساعات)
+        // ==========================================
+        function formatTime(secs) {
+            const hrs = Math.floor(secs / 3600);
+            const mins = Math.floor((secs % 3600) / 60);
+            const s = secs % 60;
+            return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-toggle-btn');
+            const ping = document.getElementById('timer-ping');
+            const dot = document.getElementById('timer-dot');
+
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btn.textContent = "استئناف";
+                btn.classList.replace('bg-amber-600', 'bg-emerald-600');
+                btn.classList.replace('hover:bg-amber-500', 'hover:bg-emerald-500');
+                ping.classList.add('hidden');
+                dot.classList.replace('bg-emerald-400', 'bg-amber-400');
+            } else {
+                isTimerRunning = true;
+                btn.textContent = "إيقاف مؤقت";
+                btn.classList.replace('bg-emerald-600', 'bg-amber-600');
+                btn.classList.replace('hover:bg-emerald-500', 'hover:bg-amber-500');
+                ping.classList.remove('hidden');
+                dot.classList.replace('bg-amber-400', 'bg-emerald-400');
+
+                timerInterval = setInterval(() => {
+                    if (totalSeconds > 0) {
+                        totalSeconds--;
+                        document.getElementById('timer-display').textContent = formatTime(totalSeconds);
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        showToast("انتهت مدة الـ 3 ساعات المخصصة للمراجعة! أحسنت العمل.", "🎉");
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            totalSeconds = 3 * 60 * 60;
+            document.getElementById('timer-display').textContent = formatTime(totalSeconds);
+            const btn = document.getElementById('timer-toggle-btn');
+            btn.textContent = "ابدأ المؤقت";
+            btn.className = "bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm";
+            document.getElementById('timer-ping').classList.add('hidden');
+            document.getElementById('timer-dot').classList.replace('bg-emerald-400', 'bg-amber-400');
+            showToast("تمت إعادة ضبط مؤقت الـ 3 ساعات.", "⏱️");
+        }
+
+        // ==========================================
+        // 3. نظام الإشعارات وتحديث التقدم
+        // ==========================================
+        function showToast(message, icon = "💡") {
+            const box = document.getElementById('toast-box');
+            document.getElementById('toast-msg').textContent = message;
+            document.getElementById('toast-icon').textContent = icon;
+            box.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3500);
+        }
+
+        function updateProgress() {
+            const totalQuestions = 10;
+            const count = solvedQuestions.size;
+            const percent = Math.round((count / totalQuestions) * 100);
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').textContent = `${percent}% (${count} / ${totalQuestions} تدريبات الدروس)`;
+        }
+
+        // ==========================================
+        // 4. عرض المحتوى والتنقل بين التبويبات
+        // ==========================================
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // تحديث مظهر أزرار التنقل
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'bg-indigo-600', 'text-white', 'shadow-md', 'ring-2', 'ring-offset-1', 'ring-indigo-400');
+                if (btn.id === 'tab-quiz') {
+                    btn.className = "tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 transition";
+                } else {
+                    btn.className = "tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 bg-white text-slate-700 hover:border-indigo-300 transition";
+                }
+            });
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (tabId === 'quiz') {
+                activeBtn.className = "tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-amber-500 bg-amber-500 text-white shadow-md transition";
+            } else {
+                activeBtn.className = "tab-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-indigo-600 bg-indigo-600 text-white shadow-md transition";
+            }
+
+            const container = document.getElementById('content-area');
+            container.classList.remove('fade-in');
+            void container.offsetWidth; // إعادة تشغيل الأنيميشن
+            container.classList.add('fade-in');
+
+            if (tabId === 'plan') {
+                renderPlanView(container);
+            } else if (tabId === 'quiz') {
+                renderExamView(container);
+            } else {
+                renderLessonView(container, sectionsData[tabId]);
+            }
+        }
+
+        // عرض الجدول الزمني لخطة الـ 3 ساعات
+        function renderPlanView(container) {
+            container.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5 mb-6">
+                        <div>
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">خارطة الطريق</span>
+                            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">خطة المراجعة التفاعلية (180 دقيقة)</h2>
+                            <p class="text-slate-600 text-sm mt-1">قسّم وقتك بذكاء بين الفهم المفاهيمي والتطبيق العملي لضمان أعلى درجات الاستيعاب.</p>
+                        </div>
+                        <button onclick="switchTab('u1d1')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 text-sm">
+                            <span>ابدأ بالدرس الأول الآن</span>
+                            <span>←</span>
+                        </button>
+                    </div>
+
+                    <!-- بطاقات المراحل الزمنية -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- المرحلة 1 -->
+                        <div class="border border-indigo-100 bg-indigo-50/40 rounded-2xl p-5 hover:shadow-md transition">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-lg">المرحلة 1 • 75 دقيقة</span>
+                                <span class="text-indigo-700 font-bold text-sm">الوحدة ١</span>
+                            </div>
+                            <h3 class="font-extrabold text-lg text-slate-900 mb-2">الدوال والمعادلات التربيعية</h3>
+                            <ul class="space-y-2 text-sm text-slate-700 mb-4">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-indigo-600 font-bold">•</span>
+                                    <span><b>الدرس 1 (35 د):</b> فهم الدوال التربيعية ورسوماتها البيانية (الرأس، محور التماثل، القيم العظمى والصغرى).</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-indigo-600 font-bold">•</span>
+                                    <span><b>الدرس 6 (40 د):</b> حل التحويلات التربيعية (الإزاحة والتمدد) والمتباينات التربيعية.</span>
+                                </li>
+                            </ul>
+                            <div class="flex gap-2">
+                                <button onclick="switchTab('u1d1')" class="text-xs font-bold bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-600 hover:text-white transition">الدرس 1</button>
+                                <button onclick="switchTab('u1d6')" class="text-xs font-bold bg-white border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-600 hover:text-white transition">الدرس 6</button>
+                            </div>
+                        </div>
+
+                        <!-- استراحة -->
+                        <div class="border border-emerald-200 bg-emerald-50/50 rounded-2xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-lg">استراحة نشطة • 15 دقيقة</span>
+                                    <span class="text-2xl">☕</span>
+                                </div>
+                                <h3 class="font-extrabold text-lg text-slate-900 mb-2">تجديد التركيز وتثبيت الذاكرة</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    بعد إتمام 75 دقيقة من التركيز في الدوال التربيعية، ابتعد عن الشاشة لمدة 15 دقيقة، اشرب الماء، وتحرك قليلاً لتهيئة عقلك للوحدة الثانية.
+                                </p>
+                            </div>
+                            <div class="mt-4 text-xs font-semibold text-emerald-700 bg-emerald-100/70 px-3 py-2 rounded-lg">
+                                نصيحة: تجنب تصفح الهاتف خلال الاستراحة للحفاظ على صفاء ذهنك.
+                            </div>
+                        </div>
+
+                        <!-- المرحلة 2 -->
+                        <div class="border border-teal-100 bg-teal-50/40 rounded-2xl p-5 hover:shadow-md transition">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-lg">المرحلة 2 • 75 دقيقة</span>
+                                <span class="text-teal-700 font-bold text-sm">الوحدة ٢</span>
+                            </div>
+                            <h3 class="font-extrabold text-lg text-slate-900 mb-2">الدوال الكسرية والجذرية</h3>
+                            <ul class="space-y-2 text-sm text-slate-700 mb-4">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-teal-600 font-bold">•</span>
+                                    <span><b>الدرس 2 (30 د):</b> حل المعادلات والمتباينات الكسرية والقيم المستثناة.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-teal-600 font-bold">•</span>
+                                    <span><b>الدرسان 4 و 5 (45 د):</b> الدوال الجذرية ومجالها ومداها، وتبسيط وحل المعادلات الجذرية.</span>
+                                </li>
+                            </ul>
+                            <div class="flex gap-2">
+                                <button onclick="switchTab('u2d2')" class="text-xs font-bold bg-white border border-teal-200 text-teal-700 px-3 py-1.5 rounded-lg hover:bg-teal-600 hover:text-white transition">الدرس 2</button>
+                                <button onclick="switchTab('u2d45')" class="text-xs font-bold bg-white border border-teal-200 text-teal-700 px-3 py-1.5 rounded-lg hover:bg-teal-600 hover:text-white transition">الدرسان 4 و 5</button>
+                            </div>
+                        </div>
+
+                        <!-- المرحلة 3 -->
+                        <div class="border border-amber-200 bg-amber-50/50 rounded-2xl p-5 hover:shadow-md transition flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-lg">المرحلة 3 • 60 دقيقة</span>
+                                    <span class="text-amber-700 font-bold text-sm">التقييم النهائي (40 نقطة)</span>
+                                </div>
+                                <h3 class="font-extrabold text-lg text-slate-900 mb-2">الاختبار التقييمي الشامل</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    اختبار متكامل من 20 سؤالاً (12 اختيار من متعدد + 8 صحيح أو خطأ) بـ 40 نقطة، يقيس جميع مهارات الوحدتين مع إمكانية خلط الأسئلة عشوائياً.
+                                </p>
+                            </div>
+                            <div class="mt-4">
+                                <button onclick="switchTab('quiz')" class="w-full text-center text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg transition shadow-sm">
+                                    ابدأ الاختبار الشامل (40 نقطة) ←
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // عرض محتوى الدرس (الملخص + الأسئلة التفاعلية)
+        function renderLessonView(container, data) {
+            const badgeColors = {
+                indigo: "bg-indigo-100 text-indigo-800",
+                teal: "bg-teal-100 text-teal-800",
+                amber: "bg-amber-100 text-amber-800"
+            };
+
+            let summaryHTML = '';
+            if (data.summary && data.summary.length > 0) {
+                summaryHTML = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+                            <span class="text-xl">📘</span>
+                            <span>ملخص القوانين والمفاهيم الأساسية</span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${data.summary.map(card => `
+                                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+                                    <h4 class="font-bold text-slate-800 text-sm mb-2.5 border-b border-slate-200 pb-1.5">${card.heading}</h4>
+                                    <ul class="space-y-2 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                        ${card.points.map(p => `<li class="flex items-start gap-2"><span class="text-indigo-500 font-bold">▪</span><span>${p}</span></li>`).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const questionsHTML = data.questions.map((q, idx) => {
+                const isSolved = solvedQuestions.has(q.id);
+                return `
+                    <div id="card-${q.id}" class="bg-white rounded-2xl shadow-sm border-2 ${isSolved ? 'border-emerald-400' : 'border-slate-200'} p-5 sm:p-6 transition">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${isSolved ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">
+                                ${isSolved ? '✓ تم الحل بنجاح' : `تدريب تفاعلي ${idx + 1}`}
+                            </span>
+                            <button onclick="toggleHint('${q.id}')" class="text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1">
+                                <span>💡</span>
+                                <span>عرض تلميح</span>
+                            </button>
+                        </div>
+
+                        <p class="text-base sm:text-lg font-bold text-slate-900 mb-4 leading-relaxed">${q.text}</p>
+
+                        <!-- صندوق التلميح -->
+                        <div id="hint-${q.id}" class="hidden bg-amber-50/80 border-r-4 border-amber-400 p-3.5 rounded-lg mb-4 text-xs sm:text-sm text-amber-900">
+                            <strong>تلميح للحل:</strong> ${q.hint}
+                        </div>
+
+                        <!-- الخيارات -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                            ${q.options.map((opt, optIdx) => `
+                                <button onclick="checkAnswer('${q.id}', ${optIdx}, ${opt.correct})" 
+                                    id="btn-${q.id}-${optIdx}"
+                                    class="opt-btn-${q.id} text-right p-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 font-semibold text-sm sm:text-base text-slate-800 transition flex items-center justify-between">
+                                    <span>${opt.text}</span>
+                                    <span class="status-icon text-lg"></span>
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <!-- صندوق التغذية الراجعة والشرح -->
+                        <div id="feedback-${q.id}" class="${isSolved ? '' : 'hidden'} bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs sm:text-sm text-emerald-950">
+                            <div class="font-extrabold text-emerald-800 mb-1 flex items-center gap-1.5">
+                                <span>✅</span>
+                                <span>خطوات الحل والتفسير:</span>
+                            </div>
+                            <p class="leading-relaxed">${q.explanation}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- ترويسة الدرس -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span class="${badgeColors[data.themeColor]} text-xs font-bold px-3 py-1 rounded-full">${data.unit}</span>
+                        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">⏱️ المدة المقترحة: ${data.duration}</span>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">${data.title}</h2>
+                </div>
+
+                ${summaryHTML}
+
+                <div class="space-y-5">
+                    <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2 px-1">
+                        <span class="text-xl">✍️</span>
+                        <span>الأسئلة التفاعلية (اختر الإجابة الصحيحة للتحقق الفوري)</span>
+                    </h3>
+                    ${questionsHTML}
+                </div>
+            `;
+        }
+
+        // إظهار أو إخفاء التلميح
+        function toggleHint(qId) {
+            const hintEl = document.getElementById(`hint-${qId}`);
+            hintEl.classList.toggle('hidden');
+        }
+
+        // التحقق من إجابة الطالب
+        function checkAnswer(qId, selectedIdx, isCorrect) {
+            const buttons = document.querySelectorAll(`.opt-btn-${qId}`);
+            const selectedBtn = document.getElementById(`btn-${qId}-${selectedIdx}`);
+            const feedbackEl = document.getElementById(`feedback-${qId}`);
+            const cardEl = document.getElementById(`card-${qId}`);
+
+            // إعادة تعيين ألوان الأزرار قبل التلوين الجديد
+            buttons.forEach(btn => {
+                btn.classList.remove('border-rose-500', 'bg-rose-50', 'text-rose-900', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                btn.querySelector('.status-icon').textContent = '';
+            });
+
+            if (isCorrect) {
+                selectedBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                selectedBtn.querySelector('.status-icon').textContent = '✔️';
+                feedbackEl.classList.remove('hidden');
+                cardEl.classList.replace('border-slate-200', 'border-emerald-400');
+
+                if (!solvedQuestions.has(qId)) {
+                    solvedQuestions.add(qId);
+                    updateProgress();
+                    showToast("إجابة صحيحة! أحسنت، تم تحديث نسبة إنجازك.", "🌟");
+                }
+            } else {
+                selectedBtn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                selectedBtn.querySelector('.status-icon').textContent = '❌';
+                showToast("إجابة غير صحيحة، حاول مرة أخرى أو استعن بزر التلميح!", "🤔");
+            }
+        }
+
+        // التهيئة عند تحميل الصفحة
+        window.onload = function() {
+            switchTab('plan');
+            updateProgress();
+        };
+    </script>
+</body>
+</html>
